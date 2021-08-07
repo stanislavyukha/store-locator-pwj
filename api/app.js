@@ -3,8 +3,9 @@ const mongoose = require("mongoose");
 const { db } = require("./api/models/store");
 const cors = require('cors');
 const app = express();
+const Store = require('./api/models/store');
+require('dotenv').config()
 
-const Store = require('./api/models/store')
 
 app.use((req,res,next) => {
     res.setHeader("Access-Control-Allow-Origin", "*"); //share with everyone my serponse *
@@ -12,7 +13,7 @@ app.use((req,res,next) => {
  })
 
 
-mongoose.connect('mongodb+srv://stason351:UkU0KFY8dPzyIJTX@cluster0.s421y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect(`mongodb+srv://stason351:${process.env.API_KEY}@cluster0.s421y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -78,8 +79,4 @@ app.get("/api/stores", (req, res) => {
 })
 
 app.set('port', 3000);
-
-
-
-// stason351 UkU0KFY8dPzyIJTX mongoose
 app.listen(3000, () => console.log("listening in localhost 3000"));
