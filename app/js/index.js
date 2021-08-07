@@ -1,5 +1,6 @@
  let map;
  let infoWindow;
+ const markers = [];
  let losAngeles = { lat: 34.06338, lng: -118.35808 };
 
  function initMap() {
@@ -19,6 +20,8 @@
     })
     .then((data) => {
       searchLocationsNear(data);
+      setStoresList(data);
+      setOnClickListener();
     });
 
  }
@@ -71,10 +74,45 @@
         label: `${storeNumber}`,
         map,
       });
-      
+      markers.push(marker);
       google.maps.event.addListener(marker, 'click', () => {
         infoWindow.setContent(html);
         infoWindow.open(map, marker);
       })
+ }
+
+ const setStoresList = (stores) => {
+   const storesList = document.querySelector('.stores-list');
+   let storesHtml = '';
+   stores.forEach((store, index) => {
+  const address = [store.addressLines[0], store.addressLines[1]];
+  const phone = store.phoneNumber;
+  storesHtml += ` <div class="store-container">
+  <div class="store-background">
+    <div class="store-info-container">
+      <div class="store-address">
+        <span>${address[0]}</span>
+        <span>${address[1]}</span>
+      </div>
+
+      <div class="store-phone-number">${phone}</div>
+    </div>
+    <div class="store-number-container">
+      <span class="store-number">${index + 1}</span>
+    </div>
+  </div>
+</div>`
+   });
+   storesList.innerHTML = storesHtml;
+ }
+
+ const setOnClickListener = () => {
+   let storeElements = document.querySelectorAll('.store-container');
+   storeElements.forEach((el, index) => {
+     el.addEventListener('click', () => {
+      google.maps.event.trigger(markers[index], 'click');
+     })
+     
+   })
  }
 
