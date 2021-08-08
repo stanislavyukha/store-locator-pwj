@@ -3,6 +3,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
 }
+
 .title {
   font-size: 88px;
   position: absolute;
@@ -124,6 +125,7 @@ body {
   min-width: 300px;
   font-size: 18px;
   padding: 8px;
+  z-index: 111;
 }
 .store-info-name {
   font-size: 24px;
@@ -160,4 +162,21 @@ body {
 .store-info-address {
   text-decoration: none;
   color: #514c4c;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: white;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  height: 50px;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

@@ -9,16 +9,34 @@
      zoom: 8,
    });
    infoWindow = new google.maps.InfoWindow();
-   getStores();
+   
  }
  
+const searchBtn = document.querySelector('.fa-search');
+  searchBtn.addEventListener('click', () => {
+  getStores();
+})
+
+const zipcode = document.querySelector('#zip-code');
+zipcode.addEventListener('keyup', (ev) => {
+  if (ev.key === "Enter") {
+    getStores();
+  }
+  
+})
+
 
  const getStores = () => {
-    fetch('http://localhost:3000/api/stores/')
+
+   if (!zipcode.value) {
+     return;
+   }
+    fetch(`http://localhost:3000/api/stores?zip_code=${zipcode.value}`)
     .then((response) => {
       return response.json();
     })
     .then((data) => {
+      clearLocations();
       searchLocationsNear(data);
       setStoresList(data);
       setOnClickListener();
@@ -105,6 +123,13 @@
    });
    storesList.innerHTML = storesHtml;
  }
+
+const clearLocations = () => {
+  infoWindow.close();
+  markers.forEach(marker => marker.setMap(null));
+  markers.length = 0;
+}
+
 
  const setOnClickListener = () => {
    let storeElements = document.querySelectorAll('.store-container');

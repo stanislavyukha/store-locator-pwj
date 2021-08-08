@@ -1,11 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { db } = require("./api/models/store");
-const cors = require('cors');
 const app = express();
+const GoogleMapsService = require('./api/services/googleMapsService')
 const Store = require('./api/models/store');
-require('dotenv').config()
+require('dotenv').config();
 
+const googleMapsService = new GoogleMapsService();
 
 app.use((req,res,next) => {
     res.setHeader("Access-Control-Allow-Origin", "*"); //share with everyone my serponse *
@@ -13,9 +13,10 @@ app.use((req,res,next) => {
  })
 
 
-mongoose.connect(`mongodb+srv://stason351:${process.env.API_KEY}@cluster0.s421y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb+srv://stason351:${process.env.DB_API_KEY}@cluster0.s421y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true,
 });
 
 app.use(express.json({
@@ -68,14 +69,28 @@ app.delete("/api/stores", async (req, res) => {
 })
 
 app.get("/api/stores", (req, res) => {
-    Store.find({}, (err, arr) => {
-        if(err) {
-            res.status(500).send();
-        } else {
-            res.status(200).send(arr);
-        }
-    });
-   
+    const zipCode = req.query.zip_code;
+    googleMapsService.getCoordinates(zipCode)
+   .then(coordinates => {
+        Store.find({
+            location: {
+                $near: {
+                        $maxDistance: 3218,
+                        $geometry: {
+                            type: "Point",
+                            coordinates: coordinates,
+                        }
+                },
+            }
+        }, (err, stores) => {
+            if(err) {
+                res.status(500).send();
+            } else {
+                res.status(200).send(stores);
+            }
+        })
+    })
+    .catch(err => console.log(err))
 })
 
 app.set('port', 3000);
