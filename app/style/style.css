@@ -68,6 +68,30 @@ body {
 
   overflow-y: scroll;
 }
+
+.intro {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.enter-zip {
+  color: #514c4c;
+  font-size: 22px;
+}
+.find-stores {
+  color: #1985a1;
+  font-size: 22px;
+}
+.no-stores-found {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #514c4c;
+  font-size: 20px;
+}
 .store-container {
   display: flex;
   border-bottom: 1px solid #979797;

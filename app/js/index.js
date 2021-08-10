@@ -6,7 +6,7 @@
  function initMap() {
    map = new google.maps.Map(document.getElementById('map'), {
      center: losAngeles,
-     zoom: 8,
+     zoom: 12,
    });
    infoWindow = new google.maps.InfoWindow();
    
@@ -31,15 +31,23 @@ zipcode.addEventListener('keyup', (ev) => {
    if (!zipcode.value) {
      return;
    }
+     
     fetch(`http://localhost:3000/api/stores?zip_code=${zipcode.value}`)
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-      clearLocations();
-      searchLocationsNear(data);
-      setStoresList(data);
-      setOnClickListener();
+      if (markers.length) {
+        clearLocations();
+      }
+      if (data.length) {
+        searchLocationsNear(data);
+        setStoresList(data);
+        setOnClickListener();
+      } else {
+        noStoresFound();
+      }
+     
     });
 
  }
@@ -141,3 +149,11 @@ const clearLocations = () => {
    })
  }
 
+const noStoresFound = () => {
+  const html =`
+    <div class="no-stores-found">
+      No stores found
+    </div>
+  `
+  document.querySelector('.stores-list').innerHTML = html;
+}

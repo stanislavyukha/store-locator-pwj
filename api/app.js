@@ -12,7 +12,7 @@ app.use((req,res,next) => {
     next(); // go to next endpoints of server
  })
 
-
+console.log(process.env.DB_API_KEY);
 mongoose.connect(`mongodb+srv://stason351:${process.env.DB_API_KEY}@cluster0.s421y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
